@@ -184,18 +184,19 @@ document.getElementById("contactForm").addEventListener("submit", async function
   // 2. Direct fallback to FormSubmit API (guaranteed delivery to kiran.rathod@nmiet.edu.in without backend dependency)
   if (!isSuccess) {
     try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("message", message);
+      formData.append("_subject", `New Portfolio Message from ${name}`);
+      formData.append("_captcha", "false");
+
       const res = await fetch("https://formsubmit.co/ajax/kiran.rathod@nmiet.edu.in", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           "Accept": "application/json"
         },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          message: message,
-          _subject: `New Portfolio Message from ${name}`
-        })
+        body: formData
       });
       const data = await res.json();
       if (res.ok || data.success === "true" || data.success === true) {
